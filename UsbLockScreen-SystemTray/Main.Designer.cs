@@ -119,7 +119,6 @@
             this.notifyIcon_main.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon_main.Icon")));
             this.notifyIcon_main.Text = "USB Lock Screen";
             this.notifyIcon_main.Visible = true;
-            this.notifyIcon_main.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_main_MouseClick);
             // 
             // Main
             // 

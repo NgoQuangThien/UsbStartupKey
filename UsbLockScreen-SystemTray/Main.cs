@@ -68,24 +68,14 @@ namespace UsbStartupKey_SystemTray
         // Create factories used by Pkcs11Interop library
         public Pkcs11InteropFactories factories = new Pkcs11InteropFactories();
 
-        private System.Windows.Forms.ContextMenu contextMenu1;
-        private System.Windows.Forms.MenuItem menuItem1;
-
         public Main()
         {
             InitializeComponent();
 
-            this.contextMenu1 = new System.Windows.Forms.ContextMenu();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-
-            // Initialize contextMenu1
-            this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { this.menuItem1 });
-            notifyIcon_main.ContextMenu = this.contextMenu1;
-
-            // Initialize menuItem1
-            this.menuItem1.Index = 0;
-            this.menuItem1.Text = "E&xit";
-            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
+            this.notifyIcon_main.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            this.notifyIcon_main.ContextMenuStrip.Items.Add("Open", null, this.menuItem_Open_Click);
+            this.notifyIcon_main.ContextMenuStrip.Items.Add("Minimize to Tray", null, this.menuItem_Minimize2Tray_Click);
+            this.notifyIcon_main.ContextMenuStrip.Items.Add("Quit", null, this.menuItem_Quit_Click);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -258,12 +248,16 @@ namespace UsbStartupKey_SystemTray
             }
         }
 
-        private void notifyIcon_main_MouseClick(object sender, MouseEventArgs e)
+        private void menuItem_Open_Click(object Sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-                this.Show();
+            this.Activate();
+            this.Show();
         }
-        private void menuItem1_Click(object Sender, EventArgs e)
+        private void menuItem_Minimize2Tray_Click(object Sender, EventArgs e)
+        {
+            this.Hide();
+        }
+        private void menuItem_Quit_Click(object Sender, EventArgs e)
         {
             System.Environment.Exit(1);
         }
