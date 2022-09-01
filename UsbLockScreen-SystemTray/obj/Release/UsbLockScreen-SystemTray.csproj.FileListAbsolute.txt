@@ -1,0 +1,14 @@
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Release\UsbLockScreen-SystemTray.exe.config
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Release\UsbLockScreen-SystemTray.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Release\UsbLockScreen-SystemTray.pdb
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Release\Pkcs11Interop.dll
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Release\Pkcs11Interop.xml
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.csproj.AssemblyReference.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.csproj.SuggestedBindingRedirects.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbStartupKey_SystemTray.Main.resources
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen_SystemTray.Properties.Resources.resources
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.csproj.GenerateResource.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.csproj.CoreCompileInputs.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.csproj.CopyComplete
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Release\UsbLockScreen-SystemTray.pdb

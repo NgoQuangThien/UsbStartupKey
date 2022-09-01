@@ -1,0 +1,15 @@
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\UsbStartupKey.exe.config
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\UsbStartupKey.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\UsbStartupKey.pdb
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\obj\Debug\UsbStartupKey.csproj.AssemblyReference.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\obj\Debug\UsbStartupKey.csproj.SuggestedBindingRedirects.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\obj\Debug\UsbStartupKey.csproj.CoreCompileInputs.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\obj\Debug\UsbStartupKey.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\obj\Debug\UsbStartupKey.pdb
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\Pkcs11Interop.dll
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\System.CodeDom.dll
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\Pkcs11Interop.xml
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\System.CodeDom.xml
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\obj\Debug\UsbStartupKey.csproj.CopyComplete
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\nunit.framework.dll
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey\bin\Debug\nunit.framework.xml

@@ -1,0 +1,14 @@
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\bin\Debug\UsbStartupKey-Service.exe.config
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\bin\Debug\UsbStartupKey-Service.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\bin\Debug\UsbStartupKey-Service.pdb
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\bin\Debug\Pkcs11Interop.dll
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\bin\Debug\Pkcs11Interop.xml
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.csproj.AssemblyReference.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.csproj.SuggestedBindingRedirects.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey_Service.ProjectInstaller.resources
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey_Service.UsbStartupKey.resources
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.csproj.GenerateResource.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.csproj.CoreCompileInputs.cache
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.csproj.CopyComplete
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-Service\obj\Debug\UsbStartupKey-Service.pdb
