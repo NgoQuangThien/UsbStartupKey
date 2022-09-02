@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 
@@ -68,6 +69,8 @@ namespace UsbStartupKey_SystemTray
         // Create factories used by Pkcs11Interop library
         public Pkcs11InteropFactories factories = new Pkcs11InteropFactories();
 
+        public List<Thread> validateThreads = new List<Thread>();
+
         public Main()
         {
             InitializeComponent();
@@ -76,6 +79,10 @@ namespace UsbStartupKey_SystemTray
             this.notifyIcon_main.ContextMenuStrip.Items.Add("Open", null, this.menuItem_Open_Click);
             this.notifyIcon_main.ContextMenuStrip.Items.Add("Minimize to Tray", null, this.menuItem_Minimize2Tray_Click);
             this.notifyIcon_main.ContextMenuStrip.Items.Add("Quit", null, this.menuItem_Quit_Click);
+
+            UsbNotification.RegisterUsbDeviceNotification(this.Handle);
+
+            Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SystemEvents_SessionSwitch);
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -98,10 +105,13 @@ namespace UsbStartupKey_SystemTray
                 textBox_serial.Text = TokenUser.Serial;
             }
 
-            UsbNotification.RegisterUsbDeviceNotification(this.Handle);
+            Thread FirstValidateThread = new Thread(new ThreadStart(LockIfInvalid));
+            FirstValidateThread.IsBackground = true;
+            FirstValidateThread.Start();
+        }
 
-            Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SystemEvents_SessionSwitch);
-
+        private void LockIfInvalid()
+        {
             Check_Usb_Device();
             if (!UsbValid)
                 LockWorkStation();
@@ -111,7 +121,6 @@ namespace UsbStartupKey_SystemTray
         {
             e.Cancel = true;
             this.Hide();
-
         }
 
         public void SystemEvents_SessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)
@@ -122,7 +131,19 @@ namespace UsbStartupKey_SystemTray
             }
             else if (e.Reason == SessionSwitchReason.SessionUnlock)
             {
-                if (!UsbValid)
+                bool need_lock = false;
+                List<Thread> tempTheads = validateThreads;
+
+                for (int i = 0; i < tempTheads.Count; i++)
+                {
+                    if (tempTheads[i].IsAlive)
+                        need_lock = true;
+                    else
+                        validateThreads.RemoveAt(i);
+                }
+
+                tempTheads.Clear();
+                if (need_lock || !UsbValid)
                     LockWorkStation();
             }
         }
@@ -132,21 +153,34 @@ namespace UsbStartupKey_SystemTray
             base.WndProc(ref m);
             if (m.Msg == UsbNotification.WmDevicechange)
             {
-                if ((int)m.WParam == UsbNotification.DbtDevicearrival || (int)m.WParam == UsbNotification.DbtDeviceremovecomplete)
+                if ((int)m.WParam == UsbNotification.DbtDevicearrival)
                 {
-                    Check_Usb_Device();
                     if (!UsbValid)
-                        LockWorkStation();
+                    {
+                        int i = validateThreads.Count;
+                        validateThreads.Insert(i, new Thread(new ThreadStart(Check_Usb_Device)));
+                        validateThreads[i].IsBackground = true;
+                        validateThreads[i].Start();
+                    }
+                }
+                else if ((int)m.WParam == UsbNotification.DbtDeviceremovecomplete)
+                {
+                    if (UsbValid)
+                    {
+                        Thread ValidateThread = new Thread(new ThreadStart(LockIfInvalid));
+                        ValidateThread.IsBackground = true;
+                        ValidateThread.Start();
+                    }
                 }
             }
         }
 
         public void Check_Usb_Device()
         {
-            UsbValid = false;
+            bool TempValid = false;
             if (String.IsNullOrEmpty(TokenUser.Pin) && String.IsNullOrEmpty(TokenUser.Serial))
             {
-                UsbValid = true;
+                TempValid = true;
             }
             else
             {
@@ -167,12 +201,13 @@ namespace UsbStartupKey_SystemTray
                             foreach (String Serial in Serials)
                             {
                                 if (Serial.Equals(TokenUser.Serial))
-                                    UsbValid = true;
+                                    TempValid = true;
                             }
                         }
                     }
                 }
             }
+            UsbValid = TempValid;
         }
 
         public static List<String> GetSerials(ISlot slot, String UserPin)
@@ -183,68 +218,88 @@ namespace UsbStartupKey_SystemTray
                 try
                 {
                     session.Login(CKU.CKU_USER, UserPin);
+
+                    // Prepare attribute template that defines search criteria
+                    List<IObjectAttribute> objectAttributes = new List<IObjectAttribute>();
+                    //objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_CLASS, CKO.CKO_DATA));
+                    objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_TOKEN, true));
+                    objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_CERTIFICATE_TYPE, CKC.CKC_X_509));
+
+                    // Find all objects that match provided attributes
+                    List<IObjectHandle> foundObjects = session.FindAllObjects(objectAttributes);
+
+                    // Prepare list of empty attributes we want to read
+                    List<CKA> attributes = new List<CKA>();
+                    attributes.Add(CKA.CKA_SERIAL_NUMBER);
+
+                    foreach (IObjectHandle object_result in foundObjects)
+                    {
+                        // Get value of specified attributes
+                        List<IObjectAttribute> objectAttributes_result = session.GetAttributeValue(object_result, attributes);
+                        foreach (IObjectAttribute objectAttribute in objectAttributes_result)
+                        {
+                            serials.Add(BitConverter.ToString(objectAttribute.GetValueAsByteArray()).Replace("-", ""));
+                        }
+                    }
+
+                    session.Logout();
                 }
                 catch
                 {
                     return serials;
                 }
-
-                // Prepare attribute template that defines search criteria
-                List<IObjectAttribute> objectAttributes = new List<IObjectAttribute>();
-                //objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_CLASS, CKO.CKO_DATA));
-                objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_TOKEN, true));
-                objectAttributes.Add(session.Factories.ObjectAttributeFactory.Create(CKA.CKA_CERTIFICATE_TYPE, CKC.CKC_X_509));
-
-                // Find all objects that match provided attributes
-                List<IObjectHandle> foundObjects = session.FindAllObjects(objectAttributes);
-
-                // Prepare list of empty attributes we want to read
-                List<CKA> attributes = new List<CKA>();
-                attributes.Add(CKA.CKA_SERIAL_NUMBER);
-
-                foreach (IObjectHandle object_result in foundObjects)
-                {
-                    // Get value of specified attributes
-                    List<IObjectAttribute> objectAttributes_result = session.GetAttributeValue(object_result, attributes);
-                    foreach (IObjectAttribute objectAttribute in objectAttributes_result)
-                    {
-                        serials.Add(BitConverter.ToString(objectAttribute.GetValueAsByteArray()).Replace("-", ""));
-                    }
-                }
-
-                session.Logout();
             }
             return serials;
         }
 
         private void btn_save_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrEmpty(textBox_pin.Text) || String.IsNullOrEmpty(textBox_serial.Text))
+                return;
+
             DialogResult dialogResult = MessageBox.Show("Do you want to save changes?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dialogResult == DialogResult.Yes)
             {
                 TokenUser.Pin = textBox_pin.Text;
                 TokenUser.Serial = textBox_serial.Text;
 
-                try
+                Check_Usb_Device();
+                if (UsbValid)
                 {
-                    var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                    var settings = configFile.AppSettings.Settings;
-                    if (settings["Pin"] == null)
-                        settings.Add("Pin", TokenUser.Pin);
-                    else
-                        settings["Pin"].Value = TokenUser.Pin;
-                    if (settings["Serial"] == null)
-                        settings.Add("Serial", TokenUser.Serial);
-                    else
-                        settings["Serial"].Value = TokenUser.Serial;
+                    try
+                    {
+                        var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                        var settings = configFile.AppSettings.Settings;
+                        if (settings["Pin"] == null)
+                            settings.Add("Pin", TokenUser.Pin);
+                        else
+                            settings["Pin"].Value = TokenUser.Pin;
+                        if (settings["Serial"] == null)
+                            settings.Add("Serial", TokenUser.Serial);
+                        else
+                            settings["Serial"].Value = TokenUser.Serial;
 
-                    configFile.Save(ConfigurationSaveMode.Modified);
-                    ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+                        configFile.Save(ConfigurationSaveMode.Modified);
+                        ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+
+                        MessageBox.Show("USB is valid. Please restart the application!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        System.Environment.Exit(1);
+                    }
+                    catch (ConfigurationErrorsException)
+                    {
+                        MessageBox.Show("Error writing app settings", "Error");
+                    }
                 }
-                catch (ConfigurationErrorsException)
+                else
                 {
-                    MessageBox.Show("Error writing app settings", "Error");
+                    MessageBox.Show("USB is invalid", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textBox_pin.Clear();
+                    textBox_serial.Clear();
+
+                    TokenUser.Pin = textBox_pin.Text;
+                    TokenUser.Serial = textBox_serial.Text;
                 }
+
             }
         }
 
