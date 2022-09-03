@@ -116,6 +116,7 @@
             // 
             // notifyIcon_main
             // 
+            this.notifyIcon_main.BalloonTipTitle = "USB Lock Screen";
             this.notifyIcon_main.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon_main.Icon")));
             this.notifyIcon_main.Text = "USB Lock Screen";
             this.notifyIcon_main.Visible = true;

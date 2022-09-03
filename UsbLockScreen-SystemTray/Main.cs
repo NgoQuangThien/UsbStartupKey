@@ -20,7 +20,6 @@ namespace UsbStartupKey_SystemTray
             public const int WmDevicechange = 0x0219; // device change event      
             private const int DbtDevtypDeviceinterface = 5;
             private static readonly Guid GuidDevinterfaceUSBDevice = new Guid("A5DCBF10-6530-11D2-901F-00C04FB951ED"); // USB devices
-            //private static IntPtr notificationHandle;
 
             /// <summary>
             /// Registers a window to receive notifications when USB devices are plugged or unplugged.
@@ -69,20 +68,36 @@ namespace UsbStartupKey_SystemTray
         // Create factories used by Pkcs11Interop library
         public Pkcs11InteropFactories factories = new Pkcs11InteropFactories();
 
-        public List<Thread> validateThreads = new List<Thread>();
+        public IPkcs11Library pkcs11Library;
 
         public Main()
         {
             InitializeComponent();
+
+            LoadUnmanagedPKCS11();
 
             this.notifyIcon_main.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             this.notifyIcon_main.ContextMenuStrip.Items.Add("Open", null, this.menuItem_Open_Click);
             this.notifyIcon_main.ContextMenuStrip.Items.Add("Minimize to Tray", null, this.menuItem_Minimize2Tray_Click);
             this.notifyIcon_main.ContextMenuStrip.Items.Add("Quit", null, this.menuItem_Quit_Click);
 
-            UsbNotification.RegisterUsbDeviceNotification(this.Handle);
+            //UsbNotification.RegisterUsbDeviceNotification(this.Handle);
 
             Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+        }
+
+        private void LoadUnmanagedPKCS11()
+        {
+            // Load unmanaged PKCS#11 library
+            try
+            {
+                pkcs11Library = factories.Pkcs11LibraryFactory.LoadPkcs11Library(factories, pkcs11LibraryPath, AppType.MultiThreaded);
+            }
+            catch
+            {
+                MessageBox.Show("Cannot load PKCS#11 library", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Environment.Exit(1);
+            }
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -103,16 +118,14 @@ namespace UsbStartupKey_SystemTray
             {
                 textBox_pin.Text = TokenUser.Pin;
                 textBox_serial.Text = TokenUser.Serial;
-            }
 
-            Thread FirstValidateThread = new Thread(new ThreadStart(LockIfInvalid));
-            FirstValidateThread.IsBackground = true;
-            FirstValidateThread.Start();
+                Check_Usb_Device();
+                LockIfInvalid();
+            }
         }
 
         private void LockIfInvalid()
         {
-            Check_Usb_Device();
             if (!UsbValid)
                 LockWorkStation();
         }
@@ -131,20 +144,14 @@ namespace UsbStartupKey_SystemTray
             }
             else if (e.Reason == SessionSwitchReason.SessionUnlock)
             {
-                bool need_lock = false;
-                List<Thread> tempTheads = validateThreads;
-
-                for (int i = 0; i < tempTheads.Count; i++)
+                if (!UsbValid)
                 {
-                    if (tempTheads[i].IsAlive)
-                        need_lock = true;
-                    else
-                        validateThreads.RemoveAt(i);
-                }
+                    Thread UnlockThread = new Thread(new ThreadStart(Check_Usb_Device));
+                    UnlockThread.IsBackground = true;
+                    UnlockThread.Start();
 
-                tempTheads.Clear();
-                if (need_lock || !UsbValid)
-                    LockWorkStation();
+                    LockIfInvalid();
+                }
             }
         }
 
@@ -153,23 +160,28 @@ namespace UsbStartupKey_SystemTray
             base.WndProc(ref m);
             if (m.Msg == UsbNotification.WmDevicechange)
             {
+                // USB Added
                 if ((int)m.WParam == UsbNotification.DbtDevicearrival)
                 {
                     if (!UsbValid)
                     {
-                        int i = validateThreads.Count;
-                        validateThreads.Insert(i, new Thread(new ThreadStart(Check_Usb_Device)));
-                        validateThreads[i].IsBackground = true;
-                        validateThreads[i].Start();
+                        Thread.Sleep(500);
+                        Thread AddedThread = new Thread(new ThreadStart(Check_Usb_Device));
+                        AddedThread.IsBackground = true;
+                        AddedThread.Start();
                     }
                 }
+                // USB Removed
                 else if ((int)m.WParam == UsbNotification.DbtDeviceremovecomplete)
                 {
                     if (UsbValid)
                     {
-                        Thread ValidateThread = new Thread(new ThreadStart(LockIfInvalid));
-                        ValidateThread.IsBackground = true;
-                        ValidateThread.Start();
+                        Thread RemovedThread = new Thread(new ThreadStart(Check_Usb_Device));
+                        RemovedThread.IsBackground = true;
+                        RemovedThread.Start();
+                        RemovedThread.Join();
+
+                        LockIfInvalid();
                     }
                 }
             }
@@ -184,24 +196,22 @@ namespace UsbStartupKey_SystemTray
             }
             else
             {
-                // Load unmanaged PKCS#11 library
-                using (IPkcs11Library pkcs11Library = factories.Pkcs11LibraryFactory.LoadPkcs11Library(factories, pkcs11LibraryPath, AppType.MultiThreaded))
+                List<ISlot> slots = pkcs11Library.GetSlotList(SlotsType.WithOrWithoutTokenPresent);
+                // Get list of all available slots
+                foreach (ISlot slot in slots)
                 {
-                    List<ISlot> slots = pkcs11Library.GetSlotList(SlotsType.WithOrWithoutTokenPresent);
+                    // Show basic information about slot
+                    ISlotInfo slotInfo = slot.GetSlotInfo();
 
-                    // Get list of all available slots
-                    foreach (ISlot slot in pkcs11Library.GetSlotList(SlotsType.WithOrWithoutTokenPresent))
+                    if (slotInfo.SlotFlags.TokenPresent)
                     {
-                        // Show basic information about slot
-                        ISlotInfo slotInfo = slot.GetSlotInfo();
-
-                        if (slotInfo.SlotFlags.TokenPresent)
+                        List<String> Serials = GetSerials(slot, TokenUser.Pin);
+                        foreach (String Serial in Serials)
                         {
-                            List<String> Serials = GetSerials(slot, TokenUser.Pin);
-                            foreach (String Serial in Serials)
+                            if (Serial.Equals(TokenUser.Serial))
                             {
-                                if (Serial.Equals(TokenUser.Serial))
-                                    TempValid = true;
+                                TempValid = true;
+                                notifyIcon_main.ShowBalloonTip(1000, notifyIcon_main.BalloonTipTitle, "USB is valid", ToolTipIcon.Info);
                             }
                         }
                     }

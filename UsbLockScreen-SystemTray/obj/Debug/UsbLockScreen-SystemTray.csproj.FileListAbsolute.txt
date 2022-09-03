@@ -12,9 +12,9 @@ G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-SystemTray\obj\
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-SystemTray\obj\Debug\UsbLockScreen-SystemTray.csproj.CopyComplete
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-SystemTray\obj\Debug\UsbLockScreen-SystemTray.exe
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbStartupKey-SystemTray\obj\Debug\UsbLockScreen-SystemTray.pdb
-G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\UsbLockScreen-SystemTray.exe.config
-G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\UsbLockScreen-SystemTray.exe
-G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\UsbLockScreen-SystemTray.pdb
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\USB Lock Screen.exe.config
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\USB Lock Screen.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\USB Lock Screen.pdb
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\Pkcs11Interop.dll
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\bin\Debug\Pkcs11Interop.xml
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\UsbLockScreen-SystemTray.csproj.AssemblyReference.cache
@@ -24,5 +24,5 @@ G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\UsbLockScreen-SystemTray.csproj.GenerateResource.cache
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\UsbLockScreen-SystemTray.csproj.CoreCompileInputs.cache
 G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\UsbLockScreen-SystemTray.csproj.CopyComplete
-G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\UsbLockScreen-SystemTray.exe
-G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\UsbLockScreen-SystemTray.pdb
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\USB Lock Screen.exe
+G:\OneDrive - actvn.edu.vn\SIEM\CODE\UsbStartupKey\UsbLockScreen-SystemTray\obj\Debug\USB Lock Screen.pdb
